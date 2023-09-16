@@ -1,30 +1,16 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { BACKGROUND_IMAGE_URL } from '../utils/constants';
-import { signupAPI } from '../auth';
 
 const Signup = () => {
   const [user, setUser] = useState({ email: '', password: '', confirmPassword: '' });
-  const location = useLocation();
-
-  console.log(location);
 
   const handleChange = event => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
 
-  const signup = async () => {
-    try {
-      if (user.password !== user.confirmPassword) {
-        throw new Error("Password and confirm password don't match");
-      }
-
-      await signupAPI(user.email, user.password);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const signup = () => {};
 
   return (
     <section
