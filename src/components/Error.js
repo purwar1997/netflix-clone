@@ -4,10 +4,10 @@ const Error = () => {
   const error = useRouteError();
 
   return (
-    <div>
+    <section>
       <h1>Oops! an error occured</h1>
       <p>Error: {error.message}</p>
-    </div>
+    </section>
   );
 };
 
