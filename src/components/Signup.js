@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BACKGROUND_IMAGE_URL } from '../utils/constants';
+import InputControl from './InputControl';
 
 const Signup = () => {
   const [user, setUser] = useState({ email: '', password: '', confirmPassword: '' });
@@ -9,6 +10,30 @@ const Signup = () => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
+
+  const signupInputFields = [
+    {
+      label: 'Email address',
+      type: 'email',
+      id: 'email',
+      name: 'email',
+      value: user.email,
+    },
+    {
+      label: 'Password',
+      type: 'password',
+      id: 'password',
+      name: 'password',
+      value: user.password,
+    },
+    {
+      label: 'Confirm Password',
+      type: 'password',
+      id: 'confirmPassword',
+      name: 'confirmPassword',
+      value: user.confirmPassword,
+    },
+  ];
 
   const signup = () => {};
 
@@ -23,47 +48,17 @@ const Signup = () => {
         <h1 className='text-3xl font-medium text-white'>Sign Up</h1>
 
         <form className='mt-8 flex flex-col gap-7'>
-          <div>
-            <input
-              className='w-full bg-input-black h-12 px-4 text-white rounded placeholder:text-gray-400 focus:outline-0'
-              type='email'
-              name='email'
-              placeholder='Email or phone number'
-              value={user.email}
-              onChange={handleChange}
+          {signupInputFields.map((input, index) => (
+            <InputControl
+              key={index}
+              inputLabel={input.label}
+              inputType={input.type}
+              inputId={input.id}
+              inputName={input.name}
+              inputValue={input.value}
+              handleChange={handleChange}
             />
-            <p className='mt-2 text-sm text-amber-500'>
-              Please enter a valid email address or phone number.
-            </p>
-          </div>
-
-          <div>
-            <input
-              className='w-full bg-input-black h-12 px-4 text-white rounded placeholder:text-gray-400 focus:outline-0'
-              type='password'
-              name='password'
-              placeholder='Password'
-              value={user.password}
-              onChange={handleChange}
-            />
-            <p className='mt-2 text-sm text-amber-500'>
-              Your password must contain between 4 and 60 characters.
-            </p>
-          </div>
-
-          <div>
-            <input
-              className='w-full bg-input-black h-12 px-4 text-white rounded placeholder:text-gray-400 focus:outline-0'
-              type='password'
-              name='confirmPassword'
-              placeholder='Confirm Password'
-              value={user.confirmPassword}
-              onChange={handleChange}
-            />
-            <p className='mt-2 text-sm text-amber-500'>
-              Your password must contain between 4 and 60 characters.
-            </p>
-          </div>
+          ))}
 
           <button
             className='h-12 bg-button-red text-white font-medium rounded'

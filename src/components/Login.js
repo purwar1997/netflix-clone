@@ -11,7 +11,7 @@ const Login = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const inputFields = [
+  const loginInputFields = [
     {
       label: 'Email address',
       type: 'email',
@@ -41,7 +41,7 @@ const Login = () => {
         <h1 className='text-3xl font-medium text-white'>Sign In</h1>
 
         <form className='mt-8 flex flex-col gap-7'>
-          {inputFields.map((input, index) => (
+          {loginInputFields.map((input, index) => (
             <InputControl
               key={index}
               inputLabel={input.label}
