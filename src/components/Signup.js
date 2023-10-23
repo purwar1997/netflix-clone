@@ -1,72 +1,85 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BACKGROUND_IMAGE_URL } from '../utils/constants';
-import InputControl from './InputControl';
+import FormInput from './FormInput';
 
 const Signup = () => {
-  const [user, setUser] = useState({ email: '', password: '', confirmPassword: '' });
+  const [user, setUser] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-  const handleChange = event => {
-    const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
-  };
+  const handleChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
-  const signupInputFields = [
+  const inputs = [
     {
-      label: 'Email address',
-      type: 'email',
-      id: 'email',
-      name: 'email',
-      value: user.email,
+      id: 1,
+      label: 'Username',
+      type: 'text',
+      name: 'username',
+      pattern: '^[a-zA-Z0-9]{4,16}$',
+      required: true,
+      errorMessage:
+        "Username must be 4-16 characters long and shouldn't contain special characters.",
     },
     {
+      id: 2,
+      label: 'Email Address',
+      type: 'email',
+      name: 'email',
+      required: true,
+      errorMessage: 'Please enter a valid email address.',
+    },
+    {
+      id: 3,
       label: 'Password',
       type: 'password',
-      id: 'password',
       name: 'password',
-      value: user.password,
+      pattern: '^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,60}$',
+      required: true,
+      errorMessage:
+        'Password must be 4-60 characters long and should contain atleast one digit, one letter and one special character.',
     },
     {
+      id: 4,
       label: 'Confirm Password',
       type: 'password',
-      id: 'confirmPassword',
       name: 'confirmPassword',
-      value: user.confirmPassword,
+      pattern: user.password,
+      required: true,
+      errorMessage: "Passwords don't match.",
     },
   ];
 
-  const signup = () => {};
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    console.log(user);
+  };
 
   return (
     <section
-      className='h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center'
+      className='min-h-screen py-20 bg-cover bg-center bg-no-repeat flex justify-center items-center'
       style={{
         backgroundImage: `linear-gradient(to bottom, rgb(0 0 0 / 0.7), rgb(0 0 0 / 0.3)), url(${BACKGROUND_IMAGE_URL})`,
       }}
     >
-      <div className='w-[450px] bg-black/75 px-12 py-10'>
+      <div className='w-[450px] bg-black/75 px-12 py-10 rounded-md'>
         <h1 className='text-3xl font-medium text-white'>Sign Up</h1>
 
-        <form className='mt-8 flex flex-col gap-7'>
-          {signupInputFields.map((input, index) => (
-            <InputControl
-              key={index}
-              inputLabel={input.label}
-              inputType={input.type}
-              inputId={input.id}
-              inputName={input.name}
-              inputValue={input.value}
+        <form className='mt-8 flex flex-col gap-6' onSubmit={handleSubmit}>
+          {inputs.map(input => (
+            <FormInput
+              key={input.id}
+              {...input}
+              value={user[input.name]}
               handleChange={handleChange}
             />
           ))}
 
-          <button
-            className='h-12 bg-button-red text-white font-medium rounded'
-            type='button'
-            onClick={signup}
-          >
-            Sign In
-          </button>
+          <button className='h-12 bg-button-red text-white font-medium rounded'>Sign Up</button>
         </form>
 
         <p className='mt-7 text-gray-400'>

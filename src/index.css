@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    .form-input:has( > input:invalid[blurred = 'true']) + p {
+        @apply block
+    }
+}
