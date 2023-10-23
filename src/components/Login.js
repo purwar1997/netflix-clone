@@ -22,10 +22,10 @@ const Login = () => {
       label: 'Password',
       type: 'password',
       name: 'password',
-      pattern: '^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,60}$',
+      pattern: '^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,60}$',
       required: true,
       errorMessage:
-        'Password should be 4-60 characters long and must contain atleast one digit, one letter and one special character.',
+        'Password should be 8-60 characters long and must contain atleast one digit, one letter and one special character.',
     },
   ];
 
