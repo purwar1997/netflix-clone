@@ -1,17 +1,32 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const FormInput = props => {
   const [inputFocus, setInputFocus] = useState(false);
   const [inputBlur, setInputBlur] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const inputRef = useRef(null);
+  const showErrorRef = useRef(true);
 
   const { id, label, type, name, value, pattern, required, errorMessage, handleChange } = props;
 
   const handleFocus = () => setInputFocus(true);
 
   const handleBlur = () => {
-    setInputFocus(false);
-    setInputBlur(true);
+    if (showErrorRef.current) {
+      setInputFocus(false);
+      setInputBlur(true);
+    }
+  };
+
+  const handleMouseDown = () => {
+    showErrorRef.current = false;
+  };
+
+  const handleClick = () => {
+    setShowPassword(!showPassword);
+    inputRef.current.setSelectionRange(0, 0);
+    inputRef.current.focus();
+    showErrorRef.current = true;
   };
 
   return (
@@ -39,6 +54,7 @@ const FormInput = props => {
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          ref={inputRef}
           blurred={inputBlur.toString()}
         />
 
@@ -46,7 +62,8 @@ const FormInput = props => {
           <span
             className='h-14 px-4 flex items-center bg-input-black text-gray-400 rounded-r cursor-pointer'
             title={showPassword ? 'Hide Password' : 'Show Password'}
-            onClick={() => setShowPassword(!showPassword)}
+            onMouseDown={handleMouseDown}
+            onClick={handleClick}
           >
             {showPassword ? 'Hide' : 'Show'}
           </span>
