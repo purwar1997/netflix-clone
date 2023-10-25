@@ -1,6 +1,7 @@
 {
-  "name": "netflix-clone",
+  "name": "netflix-frontend",
   "version": "0.1.0",
+  "description": "This directory contains client-side code of netflix clone",
   "private": true,
   "dependencies": {
     "react": "^18.2.0",
