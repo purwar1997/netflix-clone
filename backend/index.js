@@ -1,8 +1,6 @@
-import express from 'express';
 import mongoose from 'mongoose';
 import config from './config/config.js';
-
-const app = express();
+import app from './app.js';
 
 (async () => {
   try {
