@@ -5,9 +5,9 @@ import userRouter from './routes/user.routes.js';
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/api/v1/auth', userRouter);
+app.use('/api/v1', userRouter);
 
 export default app;

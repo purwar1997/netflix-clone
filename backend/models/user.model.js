@@ -2,14 +2,15 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import regexp from '../utils/regexp';
-import config from '../config/config';
+import regexp from '../utils/regexp.js';
+import config from '../config/config.js';
 
 const userSchema = new mongoose.Schema(
   {
-    fullname: {
+    name: {
       type: String,
       required: [true, 'Name is required'],
+      maxLength: [80, 'Name should be less than 80 characters'],
       lowercase: true,
       trim: true,
     },
