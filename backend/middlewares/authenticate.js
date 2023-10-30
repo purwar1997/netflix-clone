@@ -26,7 +26,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
     throw new CustomError(error.message || 'Token invalid or expired', 401);
   }
 
-  const user = await User.findById(decryptedToken.userId);
+  const user = await User.findById(decryptedToken.userId).select('+password');
 
   if (!user) {
     throw new CustomError('User not found', 404);

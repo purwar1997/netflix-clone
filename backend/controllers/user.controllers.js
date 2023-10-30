@@ -29,7 +29,7 @@ export const signup = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'User succesfully signed up',
+    message: 'Signup successful',
     user,
   });
 });
@@ -66,7 +66,7 @@ export const login = asyncHandler(async (req, res) => {
 
   res.status(200).cookie('token', accessToken, cookieOptions).json({
     success: true,
-    message: 'User successfully logged in',
+    message: 'Login successful',
     user,
   });
 });
@@ -83,6 +83,54 @@ export const login = asyncHandler(async (req, res) => {
 export const logout = asyncHandler(async (_req, res) => {
   res.status(200).clearCookie('token', cookieOptions).json({
     success: true,
-    message: 'User successfully logged out',
+    message: 'Logout successful',
+  });
+});
+
+/**
+ * @GET_PROFILE
+ * @request_type GET
+ * @route http://localhost:4000/api/v1/auth/profile
+ * @description Controller that allows user to fetch his profile
+ * @params none
+ * @returns User object
+ */
+
+export const getProfile = asyncHandler(async (_req, res) => {
+  const { user } = res;
+
+  user.password = undefined;
+
+  res.status(200).json({
+    success: true,
+    message: 'Profile successfully fetched',
+    user,
+  });
+});
+
+/**
+ * @DELETE_PROFILE
+ * @request_type DELETE
+ * @route http://localhost:4000/api/v1/auth/profile
+ * @description Controller that allows user to delete his account
+ * @params password
+ * @returns Response object
+ */
+
+export const deleteProfile = asyncHandler(async (req, res) => {
+  const { password } = req.body;
+  const { user } = res;
+
+  const passwordMatched = await user.comparePassword(password);
+
+  if (!passwordMatched) {
+    throw new CustomError('Incorrect password. Please try again.', 401);
+  }
+
+  await user.remove();
+
+  res.status(200).clearCookie('token', clearCookie).json({
+    success: true,
+    message: 'Account successfully deleted',
   });
 });
