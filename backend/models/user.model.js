@@ -9,25 +9,29 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Name is required'],
-      maxLength: [80, 'Name should be less than 80 characters'],
+      required: [true, 'Name is required.'],
+      maxLength: [80, 'Name should be less than 80 characters.'],
+      match: [
+        regexp.name,
+        'Name can only have letters inside it. Digits and special characters are not allowed.',
+      ],
       lowercase: true,
       trim: true,
     },
     email: {
       type: String,
-      required: [true, 'Email is required'],
-      match: [regexp.email, 'Please provide a valid email address'],
+      required: [true, 'Email is required.'],
+      match: [regexp.email, 'Please provide a valid email address.'],
       unique: true,
       lowercase: true,
       trim: true,
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [true, 'Password is required.'],
       match: [
         regexp.password,
-        'Password should be 8-60 characters long and must contain atleast one digit, one letter and one special character',
+        'Password should be 8-60 characters long and must contain atleast one digit, one letter and one special character.',
       ],
       select: false,
     },
