@@ -10,7 +10,7 @@ import app from './app.js';
 
     console.log(`Database connection established on ${res.connection.host}`);
 
-    app.listen(config.PORT, () => console.log(`App is listening on port ${config.PORT}`));
+    app.listen(config.PORT, () => console.log(`Server running on http://localhost:${config.PORT}`));
 
     mongoose.connection.on('error', error => {
       console.log(`${error.name}: ${error.message}`);

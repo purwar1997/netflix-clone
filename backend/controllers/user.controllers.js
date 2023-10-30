@@ -4,6 +4,15 @@ import CustomError from '../utils/CustomError.js';
 import regexp from '../utils/regexp.js';
 import cookieOptions from '../utils/cookieOptions.js';
 
+// Dummy route
+
+export const home = asyncHandler(async(req, res)=> {
+    res.status(201).json({
+        success: true,
+        message: 'Home route'
+    })
+})
+
 /**
  * @SIGNUP
  * @request_type POST
