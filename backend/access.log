@@ -1,3 +1,0 @@
-c55bcab8-d334-44dc-bf04-7c6dacbb3bfa - [2023-10-30T08:15:21.681Z] GET /api/v1 HTTP/1.1 201 39 - 4.646 ms "-" "PostmanRuntime/7.34.0"
-9091d719-7044-46cd-9bcf-28a650031ac6 - [2023-10-30T08:15:42.678Z] GET /api/v1 HTTP/1.1 201 39 - 1.215 ms "-" "PostmanRuntime/7.34.0"
-103ff284-d961-43c6-b2ae-ab426df621f6 - [2023-10-30T08:15:56.076Z] GET /api/v1 HTTP/1.1 201 39 - 4.563 ms "-" "PostmanRuntime/7.34.0"
