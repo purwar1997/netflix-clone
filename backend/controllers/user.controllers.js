@@ -109,9 +109,9 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   const resetPasswordToken = user.generateForgotPasswordToken();
 
-  await user.save({ validateBeforeSave: true });
+  await user.save({ validateBeforeSave: false });
 
-  const resetPasswordLink = `${req.protocol}//${req.host}/api/v1/auth/password/reset/${resetPasswordToken}`;
+  const resetPasswordLink = `${req.protocol}://${req.hostname}/api/v1/auth/password/reset/${resetPasswordToken}`;
 
   try {
     await mailSender({
@@ -122,14 +122,14 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   } catch (error) {
     user.forgotPasswordToken = undefined;
     user.forgotPasswordExpiry = undefined;
-    await user.save({ validateBeforeSave: true });
+    await user.save({ validateBeforeSave: false });
 
     throw new CustomError(error.message || 'Failure sending password reset email.', 500);
   }
 
   res.status(200).json({
     success: true,
-    message: 'Password reset email successfully sent',
+    message: 'Password reset email successfully sent to the user',
   });
 });
 
@@ -237,7 +237,7 @@ export const deleteProfile = asyncHandler(async (req, res) => {
     throw new CustomError('Incorrect password. Please try again.', 401);
   }
 
-  await user.remove();
+  await user.deleteOne({ _id: user.id });
 
   res.status(200).clearCookie('token', cookieOptions).json({
     success: true,

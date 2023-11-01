@@ -1,15 +1,15 @@
-import transporter from '../config/transporter.config';
-import config from '../config/config';
+import transporter from '../config/transporter.config.js';
+import config from '../config/config.js';
 
 const mailSender = async options => {
-  const { messageId } = await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: config.SMTP_HOST,
     to: options.email,
     subject: options.subject,
     text: options.text,
   });
 
-  return messageId;
+  return info;
 };
 
 export default mailSender;
