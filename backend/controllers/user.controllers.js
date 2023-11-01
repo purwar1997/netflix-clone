@@ -1,15 +1,17 @@
+import crypto from 'crypto';
 import User from '../models/user.model.js';
 import asyncHandler from '../services/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
 import cookieOptions from '../utils/cookieOptions.js';
+import mailSender from '../services/mailSender.js';
 
 /**
  * @SIGNUP
  * @request_type POST
  * @route http://localhost:4000/api/v1/auth/signup
  * @description Controller that allows user to signup
- * @params name, email, password
- * @returns user object
+ * @params name, email, password, confirmPassword
+ * @returns User object
  */
 
 export const signup = asyncHandler(async (req, res) => {
@@ -40,7 +42,7 @@ export const signup = asyncHandler(async (req, res) => {
  * @route http://localhost:4000/api/v1/auth/login
  * @description Controller that allows user to login
  * @params email, password
- * @returns user object
+ * @returns User object
  */
 
 export const login = asyncHandler(async (req, res) => {
@@ -77,7 +79,7 @@ export const login = asyncHandler(async (req, res) => {
  * @route http://localhost:4000/api/v1/auth/logout
  * @description Controller that allows user to logout
  * @params none
- * @returns response object
+ * @returns Response object
  */
 
 export const logout = asyncHandler(async (_req, res) => {
@@ -93,12 +95,43 @@ export const logout = asyncHandler(async (_req, res) => {
  * @route http://localhost:4000/api/v1/auth/password/forgot
  * @description Controller that sends an email to user to reset his password
  * @params email
- * @returns response object
+ * @returns Response object
  */
 
-export const forgotPassword = asyncHandler(async(req, res) => {
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
 
-})
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new CustomError("Sorry, we can't find an account with this email address.", 401);
+  }
+
+  const resetPasswordToken = user.generateForgotPasswordToken();
+
+  await user.save({ validateBeforeSave: true });
+
+  const resetPasswordLink = `${req.protocol}//${req.host}/api/v1/auth/password/reset/${resetPasswordToken}`;
+
+  try {
+    await mailSender({
+      email,
+      subject: 'Password reset mail',
+      text: `To reset password, copy paste the following url in browser and hit enter: ${resetPasswordLink}`,
+    });
+  } catch (error) {
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+    await user.save({ validateBeforeSave: true });
+
+    throw new CustomError(error.message || 'Failure sending password reset email.', 500);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Password reset email successfully sent',
+  });
+});
 
 /**
  * @RESET_PASSWORD
@@ -106,12 +139,35 @@ export const forgotPassword = asyncHandler(async(req, res) => {
  * @route http://localhost:4000/api/v1/auth/password/reset/:token
  * @description Controller that allows user to reset his password
  * @params password, confirmPassword
- * @returns response object
+ * @returns Response object
  */
 
-export const resetPassword = asyncHandler(async(req, res) => {
-    
-})
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { password } = req.body;
+  const { token } = req.params;
+
+  const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await User.findOne({
+    forgotPasswordToken: encryptedToken,
+    forgotPasswordExpiry: { $gt: new Date() },
+  }).select('+password');
+
+  if (!user) {
+    throw new CustomError('Password reset token invalid or expired.', 500);
+  }
+
+  user.password = password;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordExpiry = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password reset successful',
+  });
+});
 
 /**
  * @UPDATE_PASSWORD
@@ -119,12 +175,27 @@ export const resetPassword = asyncHandler(async(req, res) => {
  * @route http://localhost:4000/api/v1/auth/password/update
  * @description Controller that allows authenticated user to update his password
  * @params oldPassword, newPassword, confirmNewPassword
- * @returns response object
+ * @returns Response object
  */
 
-export const updatePassword = asyncHandler(async(req, res) => {
-    
-})
+export const updatePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const { user } = res;
+
+  const passwordMatched = await user.comparePassword(oldPassword);
+
+  if (!passwordMatched) {
+    throw new CustomError('Incorrect password. Please try again.', 401);
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password sucessfully updated',
+  });
+});
 
 /**
  * @GET_PROFILE
@@ -132,7 +203,7 @@ export const updatePassword = asyncHandler(async(req, res) => {
  * @route http://localhost:4000/api/v1/auth/profile
  * @description Controller that allows user to fetch his profile
  * @params none
- * @returns user object
+ * @returns User object
  */
 
 export const getProfile = asyncHandler(async (_req, res) => {
@@ -153,7 +224,7 @@ export const getProfile = asyncHandler(async (_req, res) => {
  * @route http://localhost:4000/api/v1/auth/profile
  * @description Controller that allows user to delete his account
  * @params password
- * @returns response object
+ * @returns Response object
  */
 
 export const deleteProfile = asyncHandler(async (req, res) => {

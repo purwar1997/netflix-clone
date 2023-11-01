@@ -20,7 +20,7 @@ router.route('/auth/login').post(login);
 router.route('/auth/logout').post(authenticate, logout);
 router.route('/auth/password/forgot').post(forgotPassword);
 router.route('/auth/password/reset/:token').put(resetPassword);
-router.route('/auth/password/update').put(updatePassword);
+router.route('/auth/password/update').put(authenticate, updatePassword);
 router.route('/auth/profile').get(authenticate, getProfile).delete(authenticate, deleteProfile);
 
 export default router;
