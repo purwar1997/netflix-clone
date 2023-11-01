@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       maxLength: [80, 'Name should be less than 80 characters.'],
       match: [
         regexp.name,
-        'Name can only have letters inside it. Digits and special characters are not allowed.',
+        'Name should only contain letters. Digits and special characters are not allowed.',
       ],
       lowercase: true,
       trim: true,

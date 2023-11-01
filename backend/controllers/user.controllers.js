@@ -129,7 +129,7 @@ export const deleteProfile = asyncHandler(async (req, res) => {
 
   await user.remove();
 
-  res.status(200).clearCookie('token', clearCookie).json({
+  res.status(200).clearCookie('token', cookieOptions).json({
     success: true,
     message: 'Account successfully deleted',
   });

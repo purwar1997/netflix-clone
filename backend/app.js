@@ -25,7 +25,7 @@ app.use(function (req, _res, next) {
 
 app.use(
   morgan(
-    ':requestId - [:date[iso]] :method :url HTTP/:http-version :status :res[content-length] - :response-time ms ":referrer" ":user-agent"',
+    ':requestId - [:date[iso]] :method :url HTTP/:http-version :status :res[content-length] - :response-time ms',
     { stream: accessLogStream }
   )
 );

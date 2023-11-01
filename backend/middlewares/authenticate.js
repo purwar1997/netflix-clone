@@ -18,15 +18,15 @@ const authenticate = asyncHandler(async (req, res, next) => {
     throw new CustomError('Token not found', 401);
   }
 
-  let decryptedToken;
+  let tokenPayload;
 
   try {
-    decryptedToken = jwt.verify(token, config.TOKEN_SECRET);
+    tokenPayload = jwt.verify(token, config.TOKEN_SECRET);
   } catch (error) {
     throw new CustomError(error.message || 'Token invalid or expired', 401);
   }
 
-  const user = await User.findById(decryptedToken.userId).select('+password');
+  const user = await User.findById(tokenPayload.userId).select('+password');
 
   if (!user) {
     throw new CustomError('User not found', 404);
