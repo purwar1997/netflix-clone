@@ -9,7 +9,7 @@ import cookieOptions from '../utils/cookieOptions.js';
  * @route http://localhost:4000/api/v1/auth/signup
  * @description Controller that allows user to signup
  * @params name, email, password
- * @returns User object
+ * @returns user object
  */
 
 export const signup = asyncHandler(async (req, res) => {
@@ -40,7 +40,7 @@ export const signup = asyncHandler(async (req, res) => {
  * @route http://localhost:4000/api/v1/auth/login
  * @description Controller that allows user to login
  * @params email, password
- * @returns Response object
+ * @returns user object
  */
 
 export const login = asyncHandler(async (req, res) => {
@@ -77,7 +77,7 @@ export const login = asyncHandler(async (req, res) => {
  * @route http://localhost:4000/api/v1/auth/logout
  * @description Controller that allows user to logout
  * @params none
- * @returns Response object
+ * @returns response object
  */
 
 export const logout = asyncHandler(async (_req, res) => {
@@ -88,12 +88,51 @@ export const logout = asyncHandler(async (_req, res) => {
 });
 
 /**
+ * @FORGOT_PASSWORD
+ * @request_type POST
+ * @route http://localhost:4000/api/v1/auth/password/forgot
+ * @description Controller that sends an email to user to reset his password
+ * @params email
+ * @returns response object
+ */
+
+export const forgotPassword = asyncHandler(async(req, res) => {
+
+})
+
+/**
+ * @RESET_PASSWORD
+ * @request_type PUT
+ * @route http://localhost:4000/api/v1/auth/password/reset/:token
+ * @description Controller that allows user to reset his password
+ * @params password, confirmPassword
+ * @returns response object
+ */
+
+export const resetPassword = asyncHandler(async(req, res) => {
+    
+})
+
+/**
+ * @UPDATE_PASSWORD
+ * @request_type PUT
+ * @route http://localhost:4000/api/v1/auth/password/update
+ * @description Controller that allows authenticated user to update his password
+ * @params oldPassword, newPassword, confirmNewPassword
+ * @returns response object
+ */
+
+export const updatePassword = asyncHandler(async(req, res) => {
+    
+})
+
+/**
  * @GET_PROFILE
  * @request_type GET
  * @route http://localhost:4000/api/v1/auth/profile
  * @description Controller that allows user to fetch his profile
  * @params none
- * @returns User object
+ * @returns user object
  */
 
 export const getProfile = asyncHandler(async (_req, res) => {
@@ -114,7 +153,7 @@ export const getProfile = asyncHandler(async (_req, res) => {
  * @route http://localhost:4000/api/v1/auth/profile
  * @description Controller that allows user to delete his account
  * @params password
- * @returns Response object
+ * @returns response object
  */
 
 export const deleteProfile = asyncHandler(async (req, res) => {
